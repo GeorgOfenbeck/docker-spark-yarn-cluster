@@ -22,10 +22,6 @@ RUN tar xfz spark.tar.gz
 RUN mv /spark-2.4.4-bin-hadoop2.7 /usr/local/spark
 RUN rm /spark.tar.gz
 
-RUN mkdir -p $HADOOP_HOME/hdfs/namenode \
-        && mkdir -p $HADOOP_HOME/hdfs/datanode
-
-
 RUN wget -O /derby.tar.gz -q http://archive.apache.org/dist/db/derby/db-derby-10.15.2.0/db-derby-10.15.2.0-bin.tar.gz
 RUN tar xfz derby.tar.gz
 RUN mv /db-derby-10.15.2.0-bin /usr/local/derby
@@ -52,6 +48,9 @@ ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME:$H
 ENV CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar
 
 
+RUN mkdir -p $HADOOP_HOME/hdfs/namenode \
+        && mkdir -p $HADOOP_HOME/hdfs/datanode
+
 COPY config/ /tmp/
 RUN mv /tmp/ssh_config $HOME/.ssh/config \
     && mv /tmp/hadoop-env.sh $HADOOP_HOME/etc/hadoop/hadoop-env.sh \
@@ -64,7 +63,7 @@ RUN mv /tmp/ssh_config $HOME/.ssh/config \
     && mv /tmp/slaves $SPARK_HOME/conf/slaves \
     && mv /tmp/spark/spark-env.sh $SPARK_HOME/conf/spark-env.sh \
     && mv /tmp/spark/log4j.properties $SPARK_HOME/conf/log4j.properties \
-    && mv /tmp/spark/spark.defaults.conf $SPARK_HOME/conf/spark.defaults.conf \
+    && mv /tmp/spark/spark-defaults.conf $SPARK_HOME/conf/spark-defaults.conf \
     && mv /tmp/danted.conf /etc/danted.conf \
     && mv /tmp/hive-site.xml /usr/local/hive/conf/hive-site.xml
 

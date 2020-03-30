@@ -19,7 +19,7 @@ This application allows to deploy multi-nodes hadoop cluster with spark 2.4.4 on
 
 ### Run spark applications on cluster : 
 - spark-shell : `spark-shell --master yarn --deploy-mode client`
-- spark : `spark-submit --master yarn --deploy-mode cluster --num-executors 2 --executor-memory 4G --executor-cores 4 --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_2.11-2.4.4.jar`
+- spark : `spark-submit --master yarn --deploy-mode cluster --num-executors 2 --executor-memory 4G --executor-cores 4 --conf spark.eventLog.enabled=true --conf spark.eventLog.dir=hdfs:///tmp/spark/history --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_2.11-2.4.4.jar`
 
 
 ### Access to the Web UI's
@@ -28,6 +28,7 @@ Connect via a Socks 5 proxy to mycluster-master:8123
 
 - Access to Hadoop cluster Web UI : mycluster-master:8088 
 - Access to spark Web UI : mycluster-master::8080
+- Access to spark History Web UI : http://mycluster-master:18080/
 - Access to hdfs Web UI : mycluster-master::50070
 - Access to the HIVE UI: mycluster-master:10002
   
