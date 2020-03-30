@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # VARIABLES
-IMG_NAME="dockersparkyarncluster:withHivev19"
+IMG_NAME="dockersparkyarncluster:withHivev21"
 HOST_PREFIX="mycluster"
 NETWORK_NAME=$HOST_PREFIX
 

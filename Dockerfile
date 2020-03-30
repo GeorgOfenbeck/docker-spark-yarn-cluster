@@ -22,6 +22,12 @@ RUN tar xfz spark.tar.gz
 RUN mv /spark-2.4.4-bin-hadoop2.7 /usr/local/spark
 RUN rm /spark.tar.gz
 
+RUN wget -O /spark212.tar.gz -q https://archive.apache.org/dist/spark/spark-2.4.2/spark-2.4.2-bin-hadoop2.7.tgz
+RUN tar xfz spark212.tar.gz
+RUN mv /spark-2.4.2-bin-hadoop2.7 /usr/local/spark212
+RUN rm /spark212.tar.gz
+
+
 RUN wget -O /derby.tar.gz -q http://archive.apache.org/dist/db/derby/db-derby-10.15.2.0/db-derby-10.15.2.0-bin.tar.gz
 RUN tar xfz derby.tar.gz
 RUN mv /db-derby-10.15.2.0-bin /usr/local/derby
@@ -61,10 +67,11 @@ RUN mv /tmp/ssh_config $HOME/.ssh/config \
     && mv /tmp/yarn-site.xml $HADOOP_HOME/etc/hadoop/yarn-site.xml \
     && cp /tmp/slaves $HADOOP_HOME/etc/hadoop/slaves \
     && mv /tmp/slaves $SPARK_HOME/conf/slaves \
-    && mv /tmp/spark/spark-env.sh $SPARK_HOME/conf/spark-env.sh \
+    && mv /tmp/spark/spark-env.sh $SPARK_HOME/conf/spark-env.sh \    
     && mv /tmp/spark/log4j.properties $SPARK_HOME/conf/log4j.properties \
     && mv /tmp/spark/spark-defaults.conf $SPARK_HOME/conf/spark-defaults.conf \
     && mv /tmp/danted.conf /etc/danted.conf \
+    && cp $SPARK_HOME/conf/* /usr/local/spark212/conf/ \
     && mv /tmp/hive-site.xml /usr/local/hive/conf/hive-site.xml
 
 ADD scripts/spark-services.sh $HADOOP_HOME/spark-services.sh
