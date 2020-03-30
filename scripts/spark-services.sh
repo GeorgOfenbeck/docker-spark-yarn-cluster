@@ -13,6 +13,17 @@ hadoop fs -put /usr/local/spark/jars/spark-jars.zip  /apps/spark
 
 $SPARK_HOME/sbin/start-all.sh
 scala -version
+service danted start
+mkdir $DERBY_HOME/data
+$HADOOP_HOME/bin/hadoop fs -mkdir       /tmp
+$HADOOP_HOME/bin/hadoop fs -mkdir       /user/
+$HADOOP_HOME/bin/hadoop fs -mkdir       /user/hive
+$HADOOP_HOME/bin/hadoop fs -mkdir       /user/hive/warehouse
+$HADOOP_HOME/bin/hadoop fs -chmod g+w   /tmp
+$HADOOP_HOME/bin/hadoop fs -chmod g+w   /user/hive/warehouse
+cd $HIVE_HOME
+$HIVE_HOME/bin/schematool -initSchema -dbType derby
+nohup $HIVE_HOME/bin/hiveserver2 &
 jps -lm
 
 

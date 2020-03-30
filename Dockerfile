@@ -1,9 +1,9 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 
 USER root
 
-RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y openssh-server default-jdk wget scala
+RUN apt-get update && apt-get -y dist-upgrade && apt-get install -y openssh-server openjdk-8-jdk wget scala dante-server curl net-tools
 RUN  apt-get -y update
 RUN  apt-get -y install zip 
 RUN  apt-get -y install vim
@@ -17,18 +17,39 @@ RUN wget -O /hadoop.tar.gz -q http://archive.apache.org/dist/hadoop/core/hadoop-
         && mv /hadoop-2.7.3 /usr/local/hadoop \
         && rm /hadoop.tar.gz
 
-RUN wget -O /spark.tar.gz -q https://archive.apache.org/dist/spark/spark-2.4.1/spark-2.4.1-bin-hadoop2.7.tgz
+RUN wget -O /spark.tar.gz -q https://archive.apache.org/dist/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz
 RUN tar xfz spark.tar.gz
-RUN mv /spark-2.4.1-bin-hadoop2.7 /usr/local/spark
+RUN mv /spark-2.4.4-bin-hadoop2.7 /usr/local/spark
 RUN rm /spark.tar.gz
+
+RUN mkdir -p $HADOOP_HOME/hdfs/namenode \
+        && mkdir -p $HADOOP_HOME/hdfs/datanode
+
+
+RUN wget -O /derby.tar.gz -q http://archive.apache.org/dist/db/derby/db-derby-10.15.2.0/db-derby-10.15.2.0-bin.tar.gz
+RUN tar xfz derby.tar.gz
+RUN mv /db-derby-10.15.2.0-bin /usr/local/derby
+RUN rm /derby.tar.gz
+
+
+RUN wget -O /hive.tar.gz -q https://downloads.apache.org/hive/hive-3.1.2/apache-hive-3.1.2-bin.tar.gz
+RUN tar xfz hive.tar.gz
+RUN mv /apache-hive-3.1.2-bin /usr/local/hive
+RUN rm /hive.tar.gz
+
+
 
 
 ENV HADOOP_HOME=/usr/local/hadoop
 ENV SPARK_HOME=/usr/local/spark
-ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME:sbin
-
-RUN mkdir -p $HADOOP_HOME/hdfs/namenode \
-        && mkdir -p $HADOOP_HOME/hdfs/datanode
+ENV DERBY_HOME=/usr/local/derby
+ENV HIVE_HOME=/usr/local/hive
+ENV HADOOP_COMMON_HOME=${HADOOP_HOME}
+ENV HADOOP_MAPRED_HOME=${HADOOP_HOME}
+ENV HADOOP_HDFS_HOME=${HADOOP_HOME}
+ENV YARN_HOME={HADOOP_HOME}
+ENV PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$SPARK_HOME/bin:$SPARK_HOME:$HIVE_HOME/bin:$DERBY_HOME/bin:sbin
+ENV CLASSPATH=$CLASSPATH:$DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar
 
 
 COPY config/ /tmp/
@@ -43,7 +64,9 @@ RUN mv /tmp/ssh_config $HOME/.ssh/config \
     && mv /tmp/slaves $SPARK_HOME/conf/slaves \
     && mv /tmp/spark/spark-env.sh $SPARK_HOME/conf/spark-env.sh \
     && mv /tmp/spark/log4j.properties $SPARK_HOME/conf/log4j.properties \
-    && mv /tmp/spark/spark.defaults.conf $SPARK_HOME/conf/spark.defaults.conf
+    && mv /tmp/spark/spark.defaults.conf $SPARK_HOME/conf/spark.defaults.conf \
+    && mv /tmp/danted.conf /etc/danted.conf \
+    && mv /tmp/hive-site.xml /usr/local/hive/conf/hive-site.xml
 
 ADD scripts/spark-services.sh $HADOOP_HOME/spark-services.sh
 
@@ -52,10 +75,7 @@ RUN chmod 744 -R $HADOOP_HOME
 
 RUN $HADOOP_HOME/bin/hdfs namenode -format
 
-EXPOSE 50010 50020 50070 50075 50090 8020 9000
-EXPOSE 10020 19888
-EXPOSE 8030 8031 8032 8033 8040 8042 8088
-EXPOSE 49707 2122 7001 7002 7003 7004 7005 7006 7007 8888 9000
+EXPOSE 8123
 
 ENTRYPOINT service ssh start; cd $SPARK_HOME; bash
 
