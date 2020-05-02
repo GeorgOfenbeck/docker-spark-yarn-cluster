@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # VARIABLES
-IMG_NAME="dockersparkyarncluster:withHivev21"
+IMG_NAME="spark-hadoop-cluster:latest"
 HOST_PREFIX="mycluster"
 NETWORK_NAME=$HOST_PREFIX
 

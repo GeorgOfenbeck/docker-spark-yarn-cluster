@@ -24,7 +24,7 @@ This application allows to deploy multi-nodes hadoop cluster with spark 2.4.4 on
 ### Run spark (Scala 2.12) applications on cluster : 
 change Spark home: `export SPARK_HOME=/usr/local/spark212/`
 - spark-shell : `$SPARK_HOME/bin/spark-shell --master yarn --deploy-mode client`
-- spark : `$SPARK_HOME/bin/spark-submit --master yarn --deploy-mode cluster --num-executors 2 --executor-memory 4G --executor-cores 4 --conf spark.eventLog.enabled=true --conf spark.eventLog.dir=hdfs:///tmp/spark/history --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/ spark-examples_2.12-2.4.2.jar`
+- spark : `$SPARK_HOME/bin/spark-submit --master yarn --deploy-mode cluster --num-executors 2 --executor-memory 4G --executor-cores 4 --conf spark.eventLog.enabled=true --conf spark.eventLog.dir=hdfs:///tmp/spark/history --class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_2.12-2.4.2.jar`
 
 
 ./spark-submit --master yarn --deploy-mode cluster --num-executors 2 --executor-memory 4G --executor-cores 4 --conf spark.eventLog.enabled=true --conf spark.eventLog.dir=hdfs:///tmp/spark/history --class org.apache.spark.examples.SparkPi /usr/local/spark212/examples/jars/spark-examples_2.12-2.4.5.jar

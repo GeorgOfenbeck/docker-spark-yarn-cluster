@@ -70,9 +70,11 @@ RUN mv /tmp/ssh_config $HOME/.ssh/config \
     && mv /tmp/spark/spark-env.sh $SPARK_HOME/conf/spark-env.sh \    
     && mv /tmp/spark/log4j.properties $SPARK_HOME/conf/log4j.properties \
     && mv /tmp/spark/spark-defaults.conf $SPARK_HOME/conf/spark-defaults.conf \
+    && cp /tmp/hive-site.xml $SPARK_HOME/conf/hive-site.xml \
     && mv /tmp/danted.conf /etc/danted.conf \
     && cp $SPARK_HOME/conf/* /usr/local/spark212/conf/ \
     && mv /tmp/hive-site.xml /usr/local/hive/conf/hive-site.xml
+    
 
 ADD scripts/spark-services.sh $HADOOP_HOME/spark-services.sh
 
